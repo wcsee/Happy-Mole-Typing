@@ -33,6 +33,9 @@ export const register = createAsyncThunk(
   async (userData: RegisterRequest, { rejectWithValue }) => {
     try {
       const response = await authService.register(userData);
+      storage.setToken(response.token);
+      storage.setRefreshToken(response.refreshToken);
+      storage.setUser(response.user);
       return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Registration failed');
@@ -118,8 +121,12 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state) => {
+      .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+        state.isAuthenticated = true;
         state.error = null;
       })
       .addCase(register.rejected, (state, action) => {

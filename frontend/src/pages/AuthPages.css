@@ -326,6 +326,59 @@
   background-color: var(--bg-secondary);
 }
 
+/* Success Message Styles */
+.success-message {
+  background-color: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+  color: #0c4a6e;
+}
+
+.success-icon {
+  font-size: 2rem;
+  color: #059669;
+  margin-bottom: var(--spacing-sm);
+}
+
+.help-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+/* Link Button Styles */
+.link-button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  margin-left: var(--spacing-xs);
+  transition: color 0.2s ease;
+}
+
+.link-button:hover {
+  color: var(--primary-dark);
+}
+
+.link-button:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Dark Theme Success Message */
+[data-theme='dark'] .success-message {
+  background-color: #0c4a6e;
+  border-color: #0ea5e9;
+  color: #bae6fd;
+}
+
 /* Animation */
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -376,5 +429,20 @@
 
 .form-success::before {
   content: '✓';
+  font-size: 0.875rem;
+}
+
+/* Error message styles */
+.error-message {
+  color: var(--error);
+  font-size: 0.75rem;
+  margin-top: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.error-message::before {
+  content: '⚠';
   font-size: 0.875rem;
 }

@@ -32,16 +32,18 @@ const RegisterPage: React.FC = () => {
           errors.username = '用户名不能为空';
         } else if (value.length < 3) {
           errors.username = '用户名至少需要3个字符';
-        } else if (value.length > 20) {
-          errors.username = '用户名不能超过20个字符';
-        } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(value)) {
-          errors.username = '用户名只能包含字母、数字、下划线和中文';
+        } else if (value.length > 50) {
+          errors.username = '用户名不能超过50个字符';
+        } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+          errors.username = '用户名只能包含字母、数字和下划线';
         }
         break;
         
       case 'email':
         if (!value) {
           errors.email = '邮箱地址不能为空';
+        } else if (value.length > 100) {
+          errors.email = '邮箱地址不能超过100个字符';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
           errors.email = '请输入有效的邮箱地址';
         }
@@ -50,10 +52,10 @@ const RegisterPage: React.FC = () => {
       case 'password':
         if (!value) {
           errors.password = '密码不能为空';
-        } else if (value.length < 8) {
-          errors.password = '密码至少需要8个字符';
-        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
-          errors.password = '密码必须包含大小写字母和数字';
+        } else if (value.length < 6) {
+          errors.password = '密码至少需要6个字符';
+        } else if (value.length > 100) {
+          errors.password = '密码不能超过100个字符';
         }
         break;
         
@@ -126,7 +128,7 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      await register({
+      const result = await register({
         username: formData.username,
         email: formData.email,
         password: formData.password,
@@ -134,12 +136,11 @@ const RegisterPage: React.FC = () => {
         agreeToTerms: formData.agreeToTerms,
       });
       
-      // Redirect to login page with success message
-      navigate('/login', {
-        state: {
-          message: '注册成功！请登录你的账户。',
-        },
-      });
+      if (result.success) {
+        // Registration successful, user is now logged in
+        // Redirect to home page
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       // Error is handled by the auth hook
       console.error('Registration failed:', err);

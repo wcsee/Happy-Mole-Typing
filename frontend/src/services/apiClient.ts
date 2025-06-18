@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { storage } from '../utils/storage';
 import { ErrorResponse } from '../types/api';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://localhost:7001/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://localhost:54792/api';
 
 class ApiClient {
   private client: AxiosInstance;

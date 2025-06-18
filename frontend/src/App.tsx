@@ -13,6 +13,8 @@ import Sidebar from './components/layout/Sidebar';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import GamePage from './pages/GamePage';
 import LevelSelectPage from './pages/LevelSelectPage';
 import ProfilePage from './pages/ProfilePage';
@@ -71,6 +73,22 @@ const AppContent: React.FC = () => {
                 element={
                   <PublicRoute>
                     <RegisterPage />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <PublicRoute>
+                    <ForgotPasswordPage />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/reset-password"
+                element={
+                  <PublicRoute>
+                    <ResetPasswordPage />
                   </PublicRoute>
                 }
               />

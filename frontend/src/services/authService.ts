@@ -4,19 +4,29 @@ import { apiClient } from './apiClient';
 
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', credentials);
+    const response = await apiClient.post<ApiResponse<{ AccessToken: string; RefreshToken: string; User: any }>>('/auth/login', credentials);
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || 'Login failed');
     }
-    return response.data.data;
+    // Transform backend response to match frontend AuthResponse interface
+    return {
+      user: response.data.data.User,
+      token: response.data.data.AccessToken,
+      refreshToken: response.data.data.RefreshToken
+    };
   },
 
-  async register(userData: RegisterRequest): Promise<{ message: string }> {
-    const response = await apiClient.post<ApiResponse<{ message: string }>>('/auth/register', userData);
-    if (!response.data.success) {
+  async register(userData: RegisterRequest): Promise<AuthResponse> {
+    const response = await apiClient.post<ApiResponse<{ AccessToken: string; RefreshToken: string; User: any }>>('/auth/register', userData);
+    if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || 'Registration failed');
     }
-    return response.data.data || { message: 'Registration successful' };
+    // Transform backend response to match frontend AuthResponse interface
+    return {
+      user: response.data.data.User,
+      token: response.data.data.AccessToken,
+      refreshToken: response.data.data.RefreshToken
+    };
   },
 
   async logout(): Promise<void> {
