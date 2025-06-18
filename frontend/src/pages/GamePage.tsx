@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGame } from '../hooks/useGame';
 import { useLocalGame } from '../hooks/useLocalGame';
@@ -43,14 +43,68 @@ const GamePage: React.FC = () => {
   } = gameHook;
 
   const [maxCombo, setMaxCombo] = useState(0);
+  const [hitEffects, setHitEffects] = useState<{[key: string]: 'hit' | 'miss'}>({});
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  // 初始化音频上下文
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.AudioContext) {
+      audioContextRef.current = new AudioContext();
+    }
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
+
+  // 播放音效
+  const playSound = useCallback((frequency: number, duration: number = 0.1) => {
+    if (!audioContextRef.current) return;
+    
+    const oscillator = audioContextRef.current.createOscillator();
+    const gainNode = audioContextRef.current.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContextRef.current.destination);
+    
+    oscillator.frequency.setValueAtTime(frequency, audioContextRef.current.currentTime);
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContextRef.current.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + duration);
+    
+    oscillator.start(audioContextRef.current.currentTime);
+    oscillator.stop(audioContextRef.current.currentTime + duration);
+  }, []);
 
   // 处理键盘输入（使用游戏钩子的处理函数）
   const handleKeyboardInput = useCallback((key: string) => {
     const result = handleKeyPress(key);
-    if (result && result.combo) {
-      setMaxCombo(prev => Math.max(prev, result.combo));
+    if (result) {
+      if (result.combo) {
+        setMaxCombo(prev => Math.max(prev, result.combo));
+      }
+      
+      // 添加视觉效果
+      if (result.hit) {
+        const moleId = result.moleId || '0';
+        setHitEffects(prev => ({ ...prev, [moleId]: 'hit' }));
+        playSound(800 + result.combo * 50); // 击中音效，连击越高音调越高
+        
+        // 清除效果
+        setTimeout(() => {
+          setHitEffects(prev => {
+            const newEffects = { ...prev };
+            delete newEffects[moleId];
+            return newEffects;
+          });
+        }, 500);
+      } else {
+        playSound(200, 0.2); // 错过音效
+      }
     }
-  }, [handleKeyPress]);
+  }, [handleKeyPress, playSound]);
 
   useKeyboard({ onKeyPress: handleKeyboardInput });
 
@@ -64,7 +118,17 @@ const GamePage: React.FC = () => {
   }, [timeLeft, isGameActive, endGame]);
 
   const handleStartGame = () => {
-    if (level) {
+    if (isLocalMode) {
+      // 本地模式：使用第一个可用关卡或默认关卡ID
+      const firstLevel = localGame.levels?.[0];
+      if (firstLevel) {
+        startGame(firstLevel.id);
+      } else {
+        // 如果没有关卡，使用默认ID 1
+        startGame(1);
+      }
+    } else if (level) {
+      // 在线模式：使用当前选择的关卡
       startGame(level.id);
     }
     setMaxCombo(0);
@@ -103,10 +167,41 @@ const GamePage: React.FC = () => {
         {!isGameActive && timeLeft > 0 && (
           <div className="game-start-overlay">
             <div className="start-content">
-              <h2>打地鼠打字游戏</h2>
-              <p>按下对应字母键击打鼹鼠！</p>
+              <div className="game-title">
+                <h2>🐹 可爱打地鼠打字游戏 🐹</h2>
+                <div className="title-decoration">
+                  <span>✨</span>
+                  <span>🌟</span>
+                  <span>✨</span>
+                </div>
+              </div>
+              <div className="game-preview">
+                <div className="preview-mole">
+                  <div className="mole-body preview">
+                    <span className="mole-letter">A</span>
+                  </div>
+                </div>
+                <div className="preview-arrow">👆</div>
+                <p>按下对应字母键击打可爱的鼹鼠！</p>
+              </div>
+              <div className="game-tips">
+                <div className="tip-item">
+                  <span className="tip-icon">⚡</span>
+                  <span>快速击中获得更高分数</span>
+                </div>
+                <div className="tip-item">
+                  <span className="tip-icon">🔥</span>
+                  <span>连击可以获得额外加分</span>
+                </div>
+                <div className="tip-item">
+                  <span className="tip-icon">🎯</span>
+                  <span>提高准确率获得更好成绩</span>
+                </div>
+              </div>
               <button className="start-button" onClick={handleStartGame}>
+                <span>🎮</span>
                 开始游戏
+                <span>🎮</span>
               </button>
             </div>
           </div>
@@ -117,7 +212,7 @@ const GamePage: React.FC = () => {
             {moles.map(mole => (
               <div
                 key={mole.id}
-                className="mole"
+                className={`mole ${hitEffects[mole.id] || ''} ${mole.isHit ? 'hit' : ''} ${mole.isMissed ? 'miss' : ''}`}
                 style={{
                   left: `${mole.x}%`,
                   top: `${mole.y}%`
@@ -125,6 +220,16 @@ const GamePage: React.FC = () => {
               >
                 <div className="mole-body">
                   <span className="mole-letter">{mole.letter}</span>
+                  {mole.isHit && (
+                    <div className="hit-effect">
+                      <span className="hit-score">+{mole.points || 100}</span>
+                      <div className="hit-sparkles">
+                        <span>✨</span>
+                        <span>⭐</span>
+                        <span>💫</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

@@ -96,4 +96,6 @@ export interface HitResult {
   points: number;
   reactionTime: number;
   combo: number;
+  moleId?: string;
+  hit?: boolean;
 }

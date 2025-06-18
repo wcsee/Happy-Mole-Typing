@@ -107,6 +107,37 @@ export const useLocalGame = () => {
     }
   }, [gameState.isPlaying, gameState.timeLeft]);
 
+  // Define spawnMole function before using it in useEffect
+  const spawnMole = useCallback(() => {
+    if (!gameState.currentLevel) return;
+
+    const position = generateRandomPosition(800, 600); // Game area dimensions
+    const letterSet = gameState.currentLevel.letterSet || getLetterSetByDifficulty(gameState.currentLevel.difficulty);
+    const mole = createMole(position, letterSet);
+    
+    setGameState(prev => ({
+      ...prev,
+      moles: [...prev.moles, mole]
+    }));
+
+    // Set mole disappear timer
+    const lifetime = getMoleLifetime(gameState.currentLevel.difficulty);
+    const timer = setTimeout(() => {
+      setGameState(prev => ({
+        ...prev,
+        moles: prev.moles.filter(m => m.id !== mole.id),
+        misses: prev.misses + 1
+      }));
+      
+      moleTimersRef.current.delete(mole.id);
+      
+      // Reset combo on miss
+      comboRef.current = 0;
+    }, lifetime);
+    
+    moleTimersRef.current.set(mole.id, timer);
+  }, [gameState.currentLevel]);
+
   // Mole spawning effect
   useEffect(() => {
     if (gameState.isPlaying && !gameState.isPaused && gameState.currentLevel) {
@@ -125,7 +156,7 @@ export const useLocalGame = () => {
         clearTimeout(spawnTimerRef.current);
       }
     };
-  }, [gameState.isPlaying, gameState.isPaused, gameState.moles.length, gameState.currentLevel]);
+  }, [gameState.isPlaying, gameState.isPaused, gameState.moles.length, gameState.currentLevel, spawnMole]);
 
   const selectLevel = useCallback((level: GameLevel) => {
     setGameState(prev => ({ ...prev, currentLevel: level }));
@@ -245,36 +276,6 @@ export const useLocalGame = () => {
     lastHitTimeRef.current = 0;
   }, []);
 
-  const spawnMole = useCallback(() => {
-    if (!gameState.currentLevel) return;
-
-    const position = generateRandomPosition(800, 600); // Game area dimensions
-    const letterSet = gameState.currentLevel.letterSet || getLetterSetByDifficulty(gameState.currentLevel.difficulty);
-    const mole = createMole(position, letterSet);
-    
-    setGameState(prev => ({
-      ...prev,
-      moles: [...prev.moles, mole]
-    }));
-
-    // Set mole disappear timer
-    const lifetime = getMoleLifetime(gameState.currentLevel.difficulty);
-    const timer = setTimeout(() => {
-      setGameState(prev => ({
-        ...prev,
-        moles: prev.moles.filter(m => m.id !== mole.id),
-        misses: prev.misses + 1
-      }));
-      
-      moleTimersRef.current.delete(mole.id);
-      
-      // Reset combo on miss
-      comboRef.current = 0;
-    }, lifetime);
-    
-    moleTimersRef.current.set(mole.id, timer);
-  }, [gameState.currentLevel]);
-
   const handleKeyPress = useCallback((key: string) => {
     if (!gameState.isPlaying || gameState.isPaused) return;
 
@@ -297,18 +298,20 @@ export const useLocalGame = () => {
 
       const points = calculateMoleScore(comboRef.current);
 
-      const hitResult: HitResult = {
+      const hitResult = {
+        hit: true,
         isHit: true,
         points,
         reactionTime,
         combo: comboRef.current,
+        moleId: targetMole.id,
       };
 
       // Update game state
       setGameState(prev => ({
         ...prev,
         moles: prev.moles.map(m => 
-          m.id === targetMole.id ? { ...m, isHit: true } : m
+          m.id === targetMole.id ? { ...m, isHit: true, points } : m
         ),
         score: prev.score + points,
         hits: prev.hits + 1
@@ -320,7 +323,7 @@ export const useLocalGame = () => {
           ...prev,
           moles: prev.moles.filter(m => m.id !== targetMole.id)
         }));
-      }, 300);
+      }, 500);
 
       // Clear mole timer
       const timer = moleTimersRef.current.get(targetMole.id);
@@ -333,7 +336,17 @@ export const useLocalGame = () => {
     } else {
       // Miss - reset combo
       comboRef.current = 0;
-      return null;
+      setGameState(prev => ({
+        ...prev,
+        misses: prev.misses + 1
+      }));
+      return {
+        hit: false,
+        isHit: false,
+        points: 0,
+        combo: 0,
+        moleId: null
+      };
     }
   }, [gameState.isPlaying, gameState.isPaused, gameState.moles, gameState.currentLevel]);
 
