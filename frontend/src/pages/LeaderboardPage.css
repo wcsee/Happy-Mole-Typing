@@ -1,0 +1,497 @@
+.leaderboard-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.loading-spinner {
+  text-align: center;
+  color: white;
+}
+
+.loading-spinner .spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.leaderboard-controls {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.control-group label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.button-group {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.button-group button {
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.button-group button:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.button-group button.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-rank-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-rank-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.user-rank-header h3 {
+  color: white;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.user-rank-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.rank-position {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.user-info {
+  flex: 1;
+}
+
+.username {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.user-stats {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.user-stats span {
+  margin: 0 5px;
+}
+
+.primary-value {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard-container {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.leaderboard-header {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leaderboard-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.time-filter-display {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
+
+.leaderboard-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.leaderboard-item:hover {
+  background: #f8f9fa;
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-item.current-user {
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  border-left: 4px solid #667eea;
+}
+
+.leaderboard-item.rank-gold {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), rgba(255, 223, 0, 0.05));
+}
+
+.leaderboard-item.rank-silver {
+  background: linear-gradient(90deg, rgba(192, 192, 192, 0.1), rgba(192, 192, 192, 0.05));
+}
+
+.leaderboard-item.rank-bronze {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.1), rgba(205, 127, 50, 0.05));
+}
+
+.rank-section {
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rank-display {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.rank-gold .rank-display {
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.rank-silver .rank-display {
+  color: #c0c0c0;
+  text-shadow: 0 2px 4px rgba(192, 192, 192, 0.3);
+}
+
+.rank-bronze .rank-display {
+  color: #cd7f32;
+  text-shadow: 0 2px 4px rgba(205, 127, 50, 0.3);
+}
+
+.rank-normal .rank-display {
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.player-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 0 20px;
+}
+
+.player-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-details {
+  flex: 1;
+}
+
+.player-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.you-badge {
+  background: #667eea;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: normal;
+}
+
+.player-stats {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.player-stats span {
+  margin: 0 5px;
+}
+
+.score-section {
+  text-align: right;
+  min-width: 120px;
+}
+
+.primary-score {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.secondary-stats {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.secondary-stats span {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #666;
+}
+
+.leaderboard-footer {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.leaderboard-footer p {
+  margin: 5px 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .leaderboard-page {
+    padding: 15px;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .leaderboard-controls {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .control-group {
+    width: 100%;
+  }
+  
+  .button-group {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .user-rank-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .leaderboard-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .leaderboard-item {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .player-info {
+    flex-direction: column;
+    margin: 0;
+    gap: 10px;
+  }
+  
+  .score-section {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .button-group button {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .leaderboard-container {
+    margin: 0 -5px;
+  }
+  
+  .leaderboard-item {
+    padding: 10px;
+  }
+  
+  .player-avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* 暗黑主题适配 */
+[data-theme="dark"] .leaderboard-container {
+  background: #2d2d2d;
+}
+
+[data-theme="dark"] .leaderboard-item {
+  border-bottom-color: #444;
+}
+
+[data-theme="dark"] .leaderboard-item:hover {
+  background: #3d3d3d;
+}
+
+[data-theme="dark"] .player-name {
+  color: white;
+}
+
+[data-theme="dark"] .primary-score {
+  color: white;
+}
+
+[data-theme="dark"] .empty-state h3 {
+  color: white;
+}
+
+[data-theme="dark"] .empty-state {
+  color: #ccc;
+}
+
+[data-theme="dark"] .empty-state p {
+  color: #ccc;
+}

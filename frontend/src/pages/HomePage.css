@@ -1,0 +1,361 @@
+/* Home Page Styles */
+.home-page {
+  min-height: 100vh;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--text-inverse);
+  padding: var(--spacing-2xl) 0;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2xl);
+  align-items: center;
+}
+
+.hero-text {
+  max-width: 600px;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: var(--spacing-lg);
+}
+
+.title-highlight {
+  color: var(--accent);
+  display: block;
+  margin-top: var(--spacing-sm);
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-xl);
+  opacity: 0.9;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+/* Game Preview */
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-preview {
+  width: 400px;
+  height: 300px;
+  background: linear-gradient(to bottom, #87ceeb 0%, #87ceeb 60%, var(--game-ground) 60%, var(--game-ground) 100%);
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+}
+
+.preview-ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: var(--spacing-lg);
+}
+
+.preview-hole {
+  width: 60px;
+  height: 45px;
+  background-color: var(--game-hole);
+  border-radius: 50% 50% 0 0;
+  position: relative;
+  cursor: pointer;
+}
+
+.preview-mole {
+  width: 45px;
+  height: 45px;
+  background-color: var(--mole-brown);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: mole-peek 2s ease-in-out infinite;
+}
+
+.preview-hole-1 .preview-mole {
+  animation-delay: 0s;
+}
+
+.preview-hole-3 .preview-mole {
+  animation-delay: 1s;
+}
+
+@keyframes mole-peek {
+  0%, 100% { bottom: -30px; }
+  50% { bottom: 8px; }
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Features Section */
+.features-section {
+  padding: var(--spacing-2xl) 0;
+  background-color: var(--bg-secondary);
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-2xl);
+  color: var(--text-primary);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+}
+
+.feature-card {
+  background-color: var(--bg-primary);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feature-icon {
+  color: var(--primary);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.feature-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* How to Play Section */
+.how-to-play-section {
+  padding: var(--spacing-2xl) 0;
+  background-color: var(--bg-primary);
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-xl);
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+}
+
+.step-number {
+  width: 48px;
+  height: 48px;
+  background-color: var(--primary);
+  color: var(--text-inverse);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.step-content p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: var(--spacing-2xl) 0;
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+  color: var(--text-inverse);
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+}
+
+.cta-content p {
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-xl);
+  opacity: 0.9;
+}
+
+.cta-actions {
+  display: flex;
+  gap: var(--spacing-lg);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: var(--spacing-xl);
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .game-preview {
+    width: 350px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: var(--spacing-xl) 0;
+    min-height: 70vh;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-description {
+    font-size: 1.125rem;
+  }
+  
+  .hero-actions {
+    justify-content: center;
+  }
+  
+  .game-preview {
+    width: 300px;
+    height: 200px;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .steps-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .step {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .cta-content h2 {
+    font-size: 2rem;
+  }
+  
+  .cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-actions .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+  
+  .game-preview {
+    width: 250px;
+    height: 180px;
+  }
+  
+  .preview-hole {
+    width: 40px;
+    height: 30px;
+  }
+  
+  .preview-mole {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .feature-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .cta-content h2 {
+    font-size: 1.75rem;
+  }
+}
