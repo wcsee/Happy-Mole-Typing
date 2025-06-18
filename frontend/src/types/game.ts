@@ -1,6 +1,8 @@
 export interface Mole {
   id: string;
   position: { x: number; y: number };
+  x: number;
+  y: number;
   letter: string;
   isVisible: boolean;
   isHit: boolean;
@@ -21,25 +23,35 @@ export interface GameLevel {
   targetScore: number;
   timeLimit: number;
   moleCount: number;
+  maxMoles?: number;
   moleSpeed: number;
   letterSet: string[];
   isUnlocked: boolean;
   bestScore?: number;
   completed: boolean;
+  order?: number;
 }
 
 export interface GameSession {
   id: string;
   levelId: number;
+  userId?: string;
   score: number;
   accuracy: number;
   hitCount: number;
   missCount: number;
+  hits?: number;
+  misses?: number;
+  maxCombo?: number;
   totalMoles: number;
   startTime: number;
   endTime?: number;
   duration?: number;
+  timeElapsed?: number;
   averageReactionTime: number;
+  wpm?: number;
+  isCompleted?: boolean;
+  isLocal?: boolean;
 }
 
 export interface GameStats {

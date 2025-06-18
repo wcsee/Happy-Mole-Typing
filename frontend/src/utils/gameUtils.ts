@@ -10,6 +10,8 @@ export const createMole = (
   return {
     id: generateId(),
     position,
+    x: position.x,
+    y: position.y,
     letter: getRandomElement(letterSet),
     isVisible: true,
     isHit: false,

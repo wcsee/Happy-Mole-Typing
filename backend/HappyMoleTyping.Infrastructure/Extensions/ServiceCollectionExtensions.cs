@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Services
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IEmailService, EmailService>();
 
@@ -39,11 +40,11 @@ public static class ServiceCollectionExtensions
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(
-                    configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured"))),
+                    configuration["JwtSettings:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured"))),
                 ValidateIssuer = true,
-                ValidIssuer = configuration["Jwt:Issuer"],
+                ValidIssuer = configuration["JwtSettings:Issuer"],
                 ValidateAudience = true,
-                ValidAudience = configuration["Jwt:Audience"],
+                ValidAudience = configuration["JwtSettings:Audience"],
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };

@@ -93,11 +93,11 @@ const AppContent: React.FC = () => {
                 }
               />
 
-              {/* Protected Routes */}
+              {/* Game Routes - Allow guest access */}
               <Route
                 path="/game"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireAuth={false}>
                     <GamePage />
                   </ProtectedRoute>
                 }
@@ -105,11 +105,13 @@ const AppContent: React.FC = () => {
               <Route
                 path="/levels"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireAuth={false}>
                     <LevelSelectPage />
                   </ProtectedRoute>
                 }
               />
+
+              {/* Protected Routes */}
               <Route
                 path="/profile"
                 element={

@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useGame } from '../hooks/useGame';
+import { useLocalGame } from '../hooks/useLocalGame';
 import { useKeyboard } from '../hooks/useKeyboard';
+import { useAuth } from '../hooks/useAuth';
 import './GamePage.css';
 
 interface MolePosition {
@@ -13,6 +16,18 @@ interface MolePosition {
 }
 
 const GamePage: React.FC = () => {
+  const location = useLocation();
+  const { user } = useAuth();
+  
+  // 检查是否为本地游戏模式
+  const isLocalMode = !user || location.state?.levelConfig?.isLocal;
+  
+  // 根据模式选择对应的游戏钩子
+  const onlineGame = useGame();
+  const localGame = useLocalGame();
+  
+  const gameHook = isLocalMode ? localGame : onlineGame;
+  
   const {
     score,
     level,
@@ -20,90 +35,31 @@ const GamePage: React.FC = () => {
     isGameActive,
     startGame,
     endGame,
-    updateScore,
-    gameStats
-  } = useGame();
+    handleKeyPress,
+    moles,
+    combo,
+    hits,
+    misses
+  } = gameHook;
 
-  const [moles, setMoles] = useState<MolePosition[]>([]);
-  const [currentTarget, setCurrentTarget] = useState<string>('');
-  const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
 
-  // 生成随机字母
-  const generateRandomLetter = () => {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    return letters[Math.floor(Math.random() * letters.length)];
-  };
-
-  // 生成鼹鼠位置
-  const generateMolePosition = (id: number): MolePosition => {
-    return {
-      id,
-      x: Math.random() * 80 + 10, // 10% - 90% 的位置
-      y: Math.random() * 60 + 20, // 20% - 80% 的位置
-      isActive: true,
-      letter: generateRandomLetter(),
-      timeLeft: 3000 + Math.random() * 2000 // 3-5秒
-    };
-  };
-
-  // 添加新鼹鼠
-  const addMole = useCallback(() => {
-    if (!isGameActive) return;
-    
-    const newMole = generateMolePosition(Date.now());
-    setMoles(prev => [...prev, newMole]);
-    
-    // 设置鼹鼠消失时间
-    setTimeout(() => {
-      setMoles(prev => prev.filter(mole => mole.id !== newMole.id));
-      if (currentTarget === newMole.letter) {
-        setCurrentTarget('');
-        setCombo(0);
-      }
-    }, newMole.timeLeft);
-  }, [isGameActive, currentTarget]);
-
-  // 处理键盘输入
-  const handleKeyPress = useCallback((key: string) => {
-    if (!isGameActive) return;
-    
-    const targetMole = moles.find(mole => mole.letter === key.toUpperCase() && mole.isActive);
-    
-    if (targetMole) {
-      // 击中鼹鼠
-      setMoles(prev => prev.filter(mole => mole.id !== targetMole.id));
-      const points = 10 + combo * 2; // 连击加分
-      // updateScore(points); // TODO: Implement score update logic
-      setCombo(prev => prev + 1);
-      setMaxCombo(prev => Math.max(prev, combo + 1));
-      setCurrentTarget('');
-    } else {
-      // 未击中
-      setCombo(0);
+  // 处理键盘输入（使用游戏钩子的处理函数）
+  const handleKeyboardInput = useCallback((key: string) => {
+    const result = handleKeyPress(key);
+    if (result && result.combo) {
+      setMaxCombo(prev => Math.max(prev, result.combo));
     }
-  }, [isGameActive, moles, combo, updateScore]);
+  }, [handleKeyPress]);
 
-  useKeyboard({ onKeyPress: handleKeyPress });
+  useKeyboard({ onKeyPress: handleKeyboardInput });
 
-  // 游戏循环
-  useEffect(() => {
-    if (!isGameActive) return;
-    
-    const interval = setInterval(() => {
-      if (Math.random() < 0.3 && moles.length < 5) { // 30%概率生成新鼹鼠，最多5个
-        addMole();
-      }
-    }, 1000);
-    
-    return () => clearInterval(interval);
-  }, [isGameActive, moles.length, addMole]);
+
 
   // 游戏结束处理
   useEffect(() => {
     if (timeLeft <= 0 && isGameActive) {
       endGame();
-      setMoles([]);
     }
   }, [timeLeft, isGameActive, endGame]);
 
@@ -111,10 +67,7 @@ const GamePage: React.FC = () => {
     if (level) {
       startGame(level.id);
     }
-    setMoles([]);
-    setCombo(0);
     setMaxCombo(0);
-    setCurrentTarget('');
   };
 
   const formatTime = (seconds: number) => {
@@ -194,8 +147,8 @@ const GamePage: React.FC = () => {
                 <div className="final-stat">
                   <span className="final-label">命中率</span>
                   <span className="final-value">
-                    {gameStats.totalHits > 0 
-                      ? Math.round((gameStats.totalHits / (gameStats.totalHits + gameStats.totalMisses)) * 100)
+                    {hits > 0 
+                      ? Math.round((hits / (hits + misses)) * 100)
                       : 0}%
                   </span>
                 </div>

@@ -19,10 +19,10 @@ public class JwtTokenService : IJwtTokenService
     public JwtTokenService(IConfiguration configuration)
     {
         _configuration = configuration;
-        _secretKey = _configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
-        _issuer = _configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer not configured");
-        _audience = _configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
-        _accessTokenExpirationMinutes = int.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
+        _secretKey = _configuration["JwtSettings:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
+        _issuer = _configuration["JwtSettings:Issuer"] ?? throw new InvalidOperationException("JWT Issuer not configured");
+        _audience = _configuration["JwtSettings:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
+        _accessTokenExpirationMinutes = int.Parse(_configuration["JwtSettings:ExpirationInMinutes"] ?? "60");
     }
 
     public string GenerateAccessToken(Guid userId, string username, string email)

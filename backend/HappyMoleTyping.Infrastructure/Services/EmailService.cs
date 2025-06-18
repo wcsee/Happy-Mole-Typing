@@ -22,12 +22,12 @@ public class EmailService : IEmailService
     {
         _configuration = configuration;
         _logger = logger;
-        _smtpServer = _configuration["Email:SmtpServer"] ?? throw new InvalidOperationException("SMTP Server not configured");
-        _smtpPort = int.Parse(_configuration["Email:SmtpPort"] ?? "587");
-        _senderEmail = _configuration["Email:SenderEmail"] ?? throw new InvalidOperationException("Sender Email not configured");
-        _senderName = _configuration["Email:SenderName"] ?? "Happy Mole Typing";
-        _username = _configuration["Email:Username"] ?? _senderEmail;
-        _password = _configuration["Email:Password"] ?? throw new InvalidOperationException("Email Password not configured");
+        _smtpServer = _configuration["EmailSettings:SmtpServer"] ?? throw new InvalidOperationException("SMTP Server not configured");
+        _smtpPort = int.Parse(_configuration["EmailSettings:SmtpPort"] ?? "587");
+        _senderEmail = _configuration["EmailSettings:SenderEmail"] ?? throw new InvalidOperationException("Sender Email not configured");
+        _senderName = _configuration["EmailSettings:SenderName"] ?? "Happy Mole Typing";
+        _username = _configuration["EmailSettings:Username"] ?? _senderEmail;
+        _password = _configuration["EmailSettings:SenderPassword"] ?? throw new InvalidOperationException("Email Password not configured");
     }
 
     public async Task<bool> SendEmailAsync(string to, string subject, string body, bool isHtml = true)

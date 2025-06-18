@@ -66,6 +66,9 @@ const Header: React.FC = () => {
               <Link to="/" className="nav-link" onClick={closeMenus}>
                 首页
               </Link>
+              <Link to="/levels" className="nav-link" onClick={closeMenus}>
+                试玩游戏
+              </Link>
               <a href="#features" className="nav-link" onClick={closeMenus}>
                 特色
               </a>
