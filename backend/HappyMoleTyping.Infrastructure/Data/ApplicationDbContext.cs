@@ -37,6 +37,10 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => e.Difficulty);
             entity.HasIndex(e => e.IsActive);
+            
+            // Configure CharacterSet to allow longer text for Chinese characters
+            entity.Property(e => e.CharacterSet)
+                  .HasMaxLength(2000); // Increased from 255 to accommodate Chinese character sets
         });
 
         // GameSession configuration

@@ -34,7 +34,7 @@ public class Level
     public int? UnlockLevel { get; set; }
 
     [Required]
-    [StringLength(255)]
+    [StringLength(2000)]
     public string CharacterSet { get; set; } = string.Empty;
 
     public bool IsActive { get; set; } = true;
