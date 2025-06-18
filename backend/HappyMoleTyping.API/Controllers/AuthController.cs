@@ -6,6 +6,12 @@ using System.Security.Claims;
 
 namespace HappyMoleTyping.API.Controllers;
 
+/// <summary>
+/// 认证控制器 - 处理用户注册、登录、登出等认证相关操作
+/// </summary>
+[ApiController]
+[Route("api/[controller]")]
+[Produces("application/json")]
 public class AuthController : BaseController
 {
     private readonly IAuthService _authService;
@@ -17,7 +23,18 @@ public class AuthController : BaseController
         _logger = logger;
     }
 
+    /// <summary>
+    /// 用户注册
+    /// </summary>
+    /// <param name="request">注册请求信息，包含用户名、邮箱、密码等</param>
+    /// <returns>注册成功返回访问令牌和用户信息</returns>
+    /// <response code="200">注册成功</response>
+    /// <response code="400">请求参数无效或用户已存在</response>
+    /// <response code="500">服务器内部错误</response>
     [HttpPost("register")]
+    [ProducesResponseType(typeof(object), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    [ProducesResponseType(typeof(string), 500)]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {
         try
@@ -36,7 +53,18 @@ public class AuthController : BaseController
         }
     }
 
+    /// <summary>
+    /// 用户登录
+    /// </summary>
+    /// <param name="request">登录请求信息，包含用户名/邮箱、密码、记住我选项</param>
+    /// <returns>登录成功返回访问令牌和用户信息</returns>
+    /// <response code="200">登录成功</response>
+    /// <response code="400">用户名或密码错误</response>
+    /// <response code="500">服务器内部错误</response>
     [HttpPost("login")]
+    [ProducesResponseType(typeof(object), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    [ProducesResponseType(typeof(string), 500)]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
         try
